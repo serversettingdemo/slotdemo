@@ -9,6 +9,6 @@ class View extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected $fillable = ['viewable_type', 'viewable_id', 'visitor', 'collection', 'viewed_at'];
-
 }
