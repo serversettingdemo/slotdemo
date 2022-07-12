@@ -15,12 +15,40 @@ class SlotpgsoftController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $data = Slotpgsoft::latest()->get();
+
+        if ($request->ajax()) {
+            return datatables()->of($data)
+                ->addIndexColumn()
+                ->addColumn('image', function ($data) {
+                    $body = "<td> <img src=" . asset('storage/' . $data->image) . " class='img-fluid' width='80px'
+                    height='auto' alt=''> </td>";
+
+                    return $body;
+                })
+                ->addColumn('iframe', function ($data) {
+                    $view = "<td class='font-w600'> " . Str::limit($data->iframe, 30) . " </td>";
+
+                    return $view;
+                })
+                ->addColumn('action', function ($data) {
+                    $button = "<a href='" . route('pgsoft.edit', $data->id) . "' class='btn btn-sm btn-alt-success mr-4' data-bs-toggle='tooltip' data-bs-placement='top' title='Edit'>
+                    <i class='fa fa-pencil-alt'></i>
+                </a>";
+                    $button .= "<button href='javascript:void(0)' type='button' name='delete' href='javascript:void(0)' data-id='" . $data->id . "' class='js-swal-confirm btn btn-sm btn-alt-danger' data-bs-toggle='tooltip' data-bs-placement='top' title='Delete'>
+                    <i class='fa fa-times'></i>
+                </button>";
+
+                    return $button;
+                })
+                ->rawColumns(['image', 'iframe', 'action'])
+                ->make(true);
+        }
+
         return view('pages.slotpgsoft.index', [
-            'title' => 'Slot Pg-soft Index',
-            'games' => Slotpgsoft::latest()->get()
+            'title' => 'Slot Pg-soft Index'
         ]);
     }
 
@@ -36,7 +64,6 @@ class SlotpgsoftController extends Controller
         return view('pages.slotpgsoft.create', [
             'title' => 'SLot Pg Soft Create'
         ]);
-
     }
 
     /**
@@ -66,9 +93,17 @@ class SlotpgsoftController extends Controller
         $validatedData['body'] = $request->body;
         $validatedData['iframe'] = $request->iframe;
 
-        Slotpgsoft::create($validatedData);
+        $data = Slotpgsoft::updateOrCreate($validatedData);
 
-        return redirect()->route('pgsoft.index')->with('success', 'Slot pgsoft' . ' ' . $request->title . ' ' . 'Berhasil Dibuat!');
+        if ($data) {
+            return response()->json(['status' => 200]);
+        } else {
+            return response()->json(['status' => 422]);
+        }
+
+        // Slotpgsoft::create($validatedData);
+
+        // return redirect()->route('pgsoft.index')->with('success', 'Slot pgsoft' . ' ' . $request->title . ' ' . 'Berhasil Dibuat!');
     }
 
     /**
@@ -127,7 +162,7 @@ class SlotpgsoftController extends Controller
             $filePath = $request->file('image')->storeAs('slotpgsoft', $fileName, 'public');
             $validatedData['image'] = $filePath;
         }
-        
+
 
         $validatedData['body'] = $request->body;
         $validatedData['iframe'] = $request->iframe;
@@ -151,6 +186,7 @@ class SlotpgsoftController extends Controller
         Storage::disk('public')->delete($filePath);
 
         $pgsoft->delete();
-        return redirect()->route('pgsoft.index')->with('success', 'Game Berhasil Dihapus!' . ' ' . $pgsoft->title);
+        return response()->json(['success' => $pgsoft->title . ' Berhasil Dihapus!']);
+        // return redirect()->route('pgsoft.index')->with('success', 'Game Berhasil Dihapus!' . ' ' . $pgsoft->title);
     }
 }

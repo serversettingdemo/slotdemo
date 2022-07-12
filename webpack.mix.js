@@ -29,6 +29,7 @@ mix
 
     /* Page JS */
     .js('resources/js/pages/tables_datatables.js', 'public/js/pages/tables_datatables.js')
+    .js('resources/js/pages/be_form_validation.js', 'public/js/pages/be_form_validation.js')
 
     /* Tools */
     .browserSync('demo.test',)

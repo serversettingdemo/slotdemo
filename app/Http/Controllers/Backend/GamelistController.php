@@ -17,10 +17,38 @@ class GamelistController extends Controller
      */
     public function index(Request $request)
     {
-        //
+        $data = Gamelist::latest()->get();
+
+        if ($request->ajax()) {
+            return datatables()->of($data)
+                ->addIndexColumn()
+                ->addColumn('image', function ($data) {
+                    $body = "<td> <img src=" . asset('storage/' . $data->image) . " class='img-fluid' width='80px'
+                    height='auto' alt=''> </td>";
+
+                    return $body;
+                })
+                ->addColumn('iframe', function ($data) {
+                    $view = "<td class='font-w600'> " . Str::limit($data->iframe, 30) . " </td>";
+
+                    return $view;
+                })
+                ->addColumn('action', function ($data) {
+                    $button = "<a href='" . route('gamelist.edit', $data->id) . "' class='edit btn btn-sm btn-alt-success mr-4' data-bs-toggle='tooltip' data-bs-placement='top' title='Edit'>
+                    <i class='fa fa-pencil-alt'></i>
+                </a>";
+                    $button .= "<button href='javascript:void(0)' data-id='" . $data->id . "' class='js-swal-confirm btn btn-sm btn-alt-danger' data-bs-toggle='tooltip' data-bs-placement='top' title='Delete'>
+                    <i class='fa fa-times'></i>
+                </button>";
+
+                    return $button;
+                })
+                ->rawColumns(['image', 'iframe', 'action'])
+                ->make(true);
+        }
         return view('pages.gamelist.index', [
             'title' => 'Gamelist',
-            'games' => Gamelist::latest()->get()
+            'gamelist' => $data
         ]);
     }
 
@@ -64,10 +92,14 @@ class GamelistController extends Controller
         $validatedData['body'] = $request->body;
         $validatedData['iframe'] = $request->iframe;
 
-        Gamelist::create($validatedData);
+        $simpan = Gamelist::updateOrCreate($validatedData);
 
-        return redirect()->route('gamelist.index')->with('success', 'Gamelist' . ' ' . $request->title . ' ' . 'Berhasil Dibuat!');
-        
+        if ($simpan) {
+            # code... 
+            return response()->json(['status' => 200, 'message' => 'Data berhasil ditambah']);
+        } else {
+            return response()->json(['status' => 422]);
+        }
     }
 
     /**
@@ -87,9 +119,10 @@ class GamelistController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Gamelist $gamelist)
+    public function edit($id)
     {
         //
+        $gamelist = Gamelist::find($id);
         return view('pages.gamelist.edit', [
             'title' => 'Gamelist Edit',
             'gamelist' => $gamelist
@@ -132,8 +165,6 @@ class GamelistController extends Controller
         $validatedData['iframe'] = $request->iframe;
         Gamelist::where('id', $gamelist->id)->update($validatedData);
 
-       
-
         return redirect()->route('gamelist.index')->with('success', 'Gamelist ' . ' ' . $request->title . ' ' . 'Berhasil Di Update!');
     }
 
@@ -152,7 +183,8 @@ class GamelistController extends Controller
         Storage::disk('public')->delete($filePath);
 
         $gamelist->delete();
-        return redirect()->route('gamelist.index')->with('success', 'Game Berhasil Dihapus!' . ' ' . $gamelist->title);
+        return response()->json(['success' => $gamelist->title . ' Berhasil Dihapus!']);
+        // return redirect()->route('gamelist.index')->with('success', 'Game Berhasil Dihapus!' . ' ' . $gamelist->title);
     }
 
     // public function checkSlug(Request $request)

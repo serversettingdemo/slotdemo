@@ -8,7 +8,7 @@
     <title>Slot Demo Dashboard</title>
 
     <meta name="description" content="Slot Demo">
-    <meta name="author" content="pixelcave">
+    <meta name="author" content="slot demo">
     <meta name="robots" content="noindex, nofollow">
 
     <!-- CSRF Token -->
@@ -118,8 +118,9 @@
 
                         <!-- User Info -->
                         <div class="ms-2">
-                            <a class="text-white fw-semibold" href="javascript:void(0)">George Taylor</a>
-                            <div class="text-white-75 fs-sm">Full Stack Developer</div>
+                            <a class="text-white fw-semibold"
+                                href="javascript:void(0)">{{ auth()->user()->username }}</a>
+                            <div class="text-white-75 fs-sm">Super Admin</div>
                         </div>
                         <!-- END User Info -->
 
@@ -514,11 +515,11 @@
             <div class="content py-0">
                 <div class="row fs-sm">
                     <div class="col-sm-6 order-sm-2 mb-1 mb-sm-0 text-center text-sm-end">
-                        Crafted with <i class="fa fa-heart text-danger"></i> by <a class="fw-semibold"
-                            href="https://1.envato.market/ydb" target="_blank">pixelcave</a>
+                        Crafted with <i class="fa fa-heart text-danger"></i> by <a class="fw-semibold" href="#"
+                            target="_blank">slot demo</a>
                     </div>
                     <div class="col-sm-6 order-sm-1 text-center text-sm-start">
-                        <a class="fw-semibold" href="https://1.envato.market/r6y" target="_blank">Dashmix</a> &copy;
+                        <a class="fw-semibold" href="#" target="_blank">Dashmix</a> &copy;
                         <span data-toggle="year-copy"></span>
                     </div>
                 </div>
@@ -531,8 +532,8 @@
     <!-- Dashmix Core JS -->
     <script src="{{ mix('js/dashmix.app.js') }}"></script>
 
-    <!-- Laravel Original JS -->
-    <!-- <script src="{{ mix('/js/laravel.app.js') }}"></script> -->
+    <!-- jQuery (required for DataTables plugin) -->
+    <script src="{{ asset('js/lib/jquery.min.js') }}"></script>
 
     @yield('js_after')
 </body>

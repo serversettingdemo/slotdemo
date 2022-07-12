@@ -59,14 +59,14 @@ var pageTablesDatatables = /*#__PURE__*/function () {
       }); // Init full DataTable
 
       jQuery('.js-dataTable-full').DataTable({
-        pageLength: 5,
-        lengthMenu: [[5, 10, 20], [5, 10, 20]],
+        pageLength: 10,
+        lengthMenu: [[10, 20, 30], [10, 20, 30]],
         autoWidth: false
       }); // Init DataTable with Buttons
 
       jQuery('.js-dataTable-buttons').DataTable({
-        pageLength: 5,
-        lengthMenu: [[5, 10, 20], [5, 10, 20]],
+        pageLength: 10,
+        lengthMenu: [[10, 20, 30], [10, 20, 30]],
         autoWidth: false,
         buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         dom: "<'row'<'col-sm-12'<'text-center bg-body-light py-2 mb-2'B>>>" + "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"

@@ -2,6 +2,7 @@
     "/js/laravel.app.js": "/js/laravel.app.js",
     "/js/dashmix.app.js": "/js/dashmix.app.js",
     "/js/pages/tables_datatables.js": "/js/pages/tables_datatables.js",
+    "/js/pages/be_form_validation.js": "/js/pages/be_form_validation.js",
     "/css/themes/xsmooth.css": "/css/themes/xsmooth.css",
     "/css/themes/xmodern.css": "/css/themes/xmodern.css",
     "/css/themes/xinspire.css": "/css/themes/xinspire.css",
